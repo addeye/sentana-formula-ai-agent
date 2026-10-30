@@ -11,9 +11,10 @@ Paket skill OpenCode untuk membangun perangkat lunak berkualitas, aman, dan dapa
 | [write-tech-spec](skills/write-tech-spec/SKILL.md) | Rancang arsitektur, skema data, transaksi atomik, dan rencana verifikasi teknis (`.agents/TECH-SPEC.md`). |
 | [create-issues](skills/create-issues/SKILL.md) | Pecah spesifikasi menjadi vertical feature slices ber-ID dengan kriteria uji konkret (`.agents/TASKS.md`). |
 
-### Fase 2: Code Confidence Formula (Implementasi & Audit)
+### Fase 2: Code Confidence Formula & Eksekusi Task
 | Modul | Elemen | Tanggung jawab |
 |---|---|---|
+| [implement-task](skills/implement-task/SKILL.md) | **Orkestrator** | Eksekusi task `.agents/TASKS.md` dengan menghubungkan seluruh guardrails dan gate Done berbukti. |
 | [spec-contract](skills/spec-contract/SKILL.md) | **Intent** | Kunci ruang lingkup (scope lock), file whitelist, dan acceptance criteria sebelum coding. |
 | [guideline-guard](skills/guideline-guard/SKILL.md) | **Guide Rails** | Pandu perubahan dan audit diff terhadap security baseline (OWASP), arsitektur eksisting, dan anti-pattern. |
 | [deterministic-verify](skills/deterministic-verify/SKILL.md) | **Independent Verification** | Eksekusi test runner, compiler, dan linter independen (bukan sekadar opini AI). |
@@ -23,6 +24,11 @@ Paket skill OpenCode untuk membangun perangkat lunak berkualitas, aman, dan dapa
 | Modul | Tanggung jawab |
 |---|---|
 | [project-handoff](skills/project-handoff/SKILL.md) | Simpan atau lanjutkan checkpoint sesi kerja (`.agents/HANDOFF.md`) lintas hari dan perangkat. |
+
+### Modul Kompatibilitas
+| Modul | Tanggung jawab |
+|---|---|
+| [verify](skills/verify/SKILL.md) | Wrapper kompatibilitas lama (autoinvoke nonaktif) yang mengarahkan verifikasi ke pipeline berbukti. |
 
 ## Alur Pipeline End-to-End
 

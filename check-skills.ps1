@@ -7,12 +7,14 @@ $names = @(
     'guideline-guard',
     'deterministic-verify',
     'evidence-receipt',
-    'project-handoff'
+    'project-handoff',
+    'implement-task',
+    'verify'
 )
 foreach ($name in $names) {
     $path = Join-Path $PSScriptRoot "skills/$name/SKILL.md"
     $text = Get-Content -LiteralPath $path -Raw -Encoding UTF8
-    if ($text -notmatch "(?s)^---\r?\nname: $name\r?\ndescription: [^\r\n]+\r?\n---") {
+    if ($text -notmatch "(?s)^---\r?\nname: $name\r?\ndescription: [^\r\n]+\r?\n(?:metadata:\r?\n  opencode/autoinvoke: false\r?\n)?---") {
         throw "Invalid metadata: $name"
     }
     if ($text -notmatch '## Alur' -or $text -notmatch '## (Format )?(Keluaran|Isi PRD|Isi spec|Isi setiap task)') {
