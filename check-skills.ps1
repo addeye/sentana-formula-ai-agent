@@ -10,7 +10,8 @@ $names = @(
     'project-handoff',
     'implement-task',
     'verify',
-    'git-workflow'
+    'git-workflow',
+    'sentana-ui-patterns'
 )
 foreach ($name in $names) {
     $path = Join-Path $PSScriptRoot "skills/$name/SKILL.md"

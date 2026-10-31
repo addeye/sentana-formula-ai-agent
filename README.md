@@ -2,7 +2,7 @@
 
 Paket skill OpenCode untuk membangun perangkat lunak berkualitas, aman, dan dapat dipercaya dari ide produk sampai verifikasi kode. Rancangan mengombinasikan alur perencanaan modular (`mini-prd`, `write-tech-spec`, `create-issues`), empat pilar Code Confidence Formula (`spec-contract`, `guideline-guard`, `deterministic-verify`, `evidence-receipt`), serta skill pendamping sesi (`project-handoff`).
 
-## Daftar Skills Lengkap (10 Modul Aktif + 1 Wrapper Kompatibilitas)
+## Daftar Skills Lengkap (11 Modul Aktif + 1 Wrapper Kompatibilitas)
 
 ### Fase 1: Perencanaan & Breakdown
 | Modul | Tanggung jawab |
@@ -11,7 +11,12 @@ Paket skill OpenCode untuk membangun perangkat lunak berkualitas, aman, dan dapa
 | [write-tech-spec](skills/write-tech-spec/SKILL.md) | Rancang arsitektur, skema data, transaksi atomik, dan rencana verifikasi teknis (`.agents/TECH-SPEC.md`). |
 | [create-issues](skills/create-issues/SKILL.md) | Pecah spesifikasi menjadi vertical feature slices ber-ID dengan kriteria uji konkret (`.agents/TASKS.md`). |
 
-### Fase 2: Code Confidence Formula & Eksekusi Task
+### Fase 2: Standar Desain & Arsitektur UI
+| Modul | Tanggung jawab |
+|---|---|
+| [sentana-ui-patterns](skills/sentana-ui-patterns/SKILL.md) | Blueprint antarmuka software house Sentana untuk Web (Admin & Landing), Mobile, dan Desktop. |
+
+### Fase 3: Code Confidence Formula & Eksekusi Task
 | Modul | Elemen | Tanggung jawab |
 |---|---|---|
 | [implement-task](skills/implement-task/SKILL.md) | **Orkestrator** | Eksekusi task `.agents/TASKS.md` dengan menghubungkan seluruh guardrails dan gate Done berbukti. |
@@ -20,7 +25,7 @@ Paket skill OpenCode untuk membangun perangkat lunak berkualitas, aman, dan dapa
 | [deterministic-verify](skills/deterministic-verify/SKILL.md) | **Independent Verification** | Eksekusi test runner, compiler, dan linter independen (bukan sekadar opini AI). |
 | [evidence-receipt](skills/evidence-receipt/SKILL.md) | **Evidence** | Terbitkan audit trail bukti eksekusi nyata, status AC, dan batas verifikasi sebelum serah terima. |
 
-### Fase 3: Sesi & Kolaborasi
+### Fase 4: Sesi & Kolaborasi
 | Modul | Tanggung jawab |
 |---|---|
 | [project-handoff](skills/project-handoff/SKILL.md) | Simpan atau lanjutkan checkpoint sesi kerja (`.agents/HANDOFF.md`) lintas hari dan perangkat. |
@@ -69,6 +74,7 @@ Setiap modul dapat digunakan secara mandiri maupun terangkai dalam pipeline. Con
 Gunakan @mini-prd untuk merancang PRD fitur ini.
 Gunakan @write-tech-spec untuk menyusun rencana teknis dari PRD.
 Gunakan @create-issues untuk memecah spesifikasi menjadi task yang actionable.
+Gunakan @sentana-ui-patterns untuk merancang antarmuka admin panel atau landing page.
 Gunakan @spec-contract untuk mengunci scope task T-01 sebelum mulai coding.
 Gunakan @guideline-guard untuk memeriksa keamanan diff ini.
 Gunakan @deterministic-verify untuk menjalankan pengujian fitur ini.
