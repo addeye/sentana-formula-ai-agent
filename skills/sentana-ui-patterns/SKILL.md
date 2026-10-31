@@ -19,10 +19,11 @@ Standar arsitektur antarmuka software house Sentana Teknologi untuk memastikan s
 
 ### 1. Identifikasi Target Platform & Archetype
 Sebelum menulis kode antarmuka atau komponen, periksa tipe halaman yang dibangun:
-1. **Web Admin Panel / Dashboard:** Baca referensi `references/web.md` bagian 1.
-2. **Web Public / Landing Page:** Baca referensi `references/web.md` bagian 2.
-3. **Mobile & Tablet App (Android / iOS / PWA):** Baca referensi `references/mobile.md`.
-4. **Desktop App (Windows / macOS / POS Kasir):** Baca referensi `references/desktop.md`.
+1. **Web Admin Panel & Dashboard:** Baca referensi `references/web.md` bagian 1 (batas lebar shell, form grid, table container).
+2. **Web Autentikasi (Login/Register):** Baca referensi `references/web.md` bagian 2 (card container `max-w-md`, proporsi input 44px, full-width CTA).
+3. **Web Public / Landing Page:** Baca referensi `references/web.md` bagian 3.
+4. **Mobile & Tablet App (Android / iOS / PWA):** Baca referensi `references/mobile.md`.
+5. **Desktop App (Windows / macOS / POS Kasir):** Baca referensi `references/desktop.md`.
 
 ### 2. Standar Fondasi Komponen (Berlaku Lintas Platform)
 Setiap antarmuka yang dibangun wajib memenuhi:
