@@ -2,7 +2,7 @@
 
 Paket skill OpenCode untuk membangun perangkat lunak berkualitas, aman, dan dapat dipercaya dari ide produk sampai verifikasi kode. Rancangan mengombinasikan alur perencanaan modular (`mini-prd`, `write-tech-spec`, `create-issues`), empat pilar Code Confidence Formula (`spec-contract`, `guideline-guard`, `deterministic-verify`, `evidence-receipt`), serta skill pendamping sesi (`project-handoff`).
 
-## Daftar Skills Lengkap (9 Modul Aktif + 1 Wrapper Kompatibilitas)
+## Daftar Skills Lengkap (10 Modul Aktif + 1 Wrapper Kompatibilitas)
 
 ### Fase 1: Perencanaan & Breakdown
 | Modul | Tanggung jawab |
@@ -24,6 +24,7 @@ Paket skill OpenCode untuk membangun perangkat lunak berkualitas, aman, dan dapa
 | Modul | Tanggung jawab |
 |---|---|
 | [project-handoff](skills/project-handoff/SKILL.md) | Simpan atau lanjutkan checkpoint sesi kerja (`.agents/HANDOFF.md`) lintas hari dan perangkat. |
+| [git-workflow](skills/git-workflow/SKILL.md) | Kelola commit, push, branch, dan PR adaptif (Conventional Commits) untuk solo dev maupun tim. |
 
 ### Modul Kompatibilitas
 | Modul | Tanggung jawab |
@@ -73,6 +74,7 @@ Gunakan @guideline-guard untuk memeriksa keamanan diff ini.
 Gunakan @deterministic-verify untuk menjalankan pengujian fitur ini.
 Gunakan @evidence-receipt untuk merangkum bukti eksekusi nyata.
 Gunakan @project-handoff untuk menyimpan checkpoint sebelum saya berganti perangkat.
+Gunakan @git-workflow untuk membuat commit rapi atau membuka PR berbasis bukti.
 ```
 
 Semua modul terpasang secara global di `C:\Users\USER\.config\opencode\skills\<id>\SKILL.md`. Folder `skills/` pada repositori ini berisi salinan lengkap sehingga siap di-commit dan dikelola melalui GitHub.

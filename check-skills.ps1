@@ -9,7 +9,8 @@ $names = @(
     'evidence-receipt',
     'project-handoff',
     'implement-task',
-    'verify'
+    'verify',
+    'git-workflow'
 )
 foreach ($name in $names) {
     $path = Join-Path $PSScriptRoot "skills/$name/SKILL.md"
