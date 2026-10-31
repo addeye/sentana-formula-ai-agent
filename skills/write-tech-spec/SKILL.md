@@ -16,7 +16,15 @@ description: 'Buat atau tinjau technical specification di .agents/TECH-SPEC.md d
 ## Alur
 1. Baca `.agents/PRD.md` jika tersedia; PRD diutamakan. Bug atau perubahan terbatas boleh memakai brief langsung yang cukup jelas tanpa mewajibkan PRD baru. Jika acuan tidak cukup atau saling bertentangan, tanyakan scope yang berlaku.
 2. Temukan konteks repo: instruksi proyek, manifest/lockfile, konfigurasi, kode terkait, pola arsitektur, penyimpanan, test, dan CI. Catat path sumber. Tidak adanya satu jenis manifest bukan bukti proyek kosong.
-3. Pertahankan pola, dependensi, dan versi yang ada. Untuk proyek baru, bedakan pilihan yang disetujui dari usulan; jangan mengarang stack, auth, hosting, atau target NFR.
+3. Terapkan protokol versi berikut sebelum menetapkan stack:
+   - Proyek yang sudah ada: baca manifest/lockfile dan pertahankan versi yang berjalan, kecuali upgrade diminta eksplisit.
+   - Proyek baru atau user meminta teknologi tanpa versi spesifik: dilarang menebak nomor versi dari ingatan (knowledge cutoff). Periksa rilis latest stable resmi melalui registry atau dokumentasi bila tool tersedia (`composer show <pkg> --available`, `npm view <pkg> version`, PyPI, websearch).
+   - Bila tool registry/network tidak tersedia atau verifikasi tidak meyakinkan: catat versi sebagai `[Versi target: TBD; latest stable belum terverifikasi]` dan tanyakan versi target ke user, bukan berasumsi.
+   - Gunakan pencarian untuk menemukan sumber, bukan sebagai bukti tunggal. Konfirmasi versi pada release notes/support policy resmi dan registry. Bedakan framework dari template scaffolding; jangan salah menganggap versi skeleton sebagai versi framework. Kecualikan alpha/beta/RC/dev kecuali diminta. Dist-tag seperti latest adalah petunjuk, bukan bukti dukungan atau kompatibilitas.
+   - Catat paket, versi kandidat eksak, URL sumber, tanggal pemeriksaan, status stable/support, serta kebutuhan runtime dan dependency utama. Cocokkan dengan hosting, runtime, DB/driver, plugin kritis, dan batasan user. Latest stable belum tentu kompatibel; bila konflik, tampilkan kandidat dan trade-off untuk persetujuan, jangan diam-diam downgrade atau upgrade.
+   - Pemeriksaan hanya read-only: jangan install/update dependency atau mengubah lockfile. Command contoh harus disesuaikan dengan tool tersedia; jangan mengklaim sudah dijalankan. Jika sumber bertentangan, tandai TBD dan blocker bagian terdampak; spec lain boleh tetap disusun.
+   - Versi yang sudah dipilih user dihormati, tetapi status dukungan dan kompatibilitas tetap diperiksa bila memungkinkan. Pemilihan versi lama/EOL harus disertai risiko dan keputusan eksplisit, bukan diberi label latest.
+   - Bedakan pilihan yang disetujui dari usulan; jangan mengarang stack, auth, hosting, atau target NFR.
 4. Bedakan observasi terkonfirmasi, keputusan disetujui, asumsi, dan TBD. Klarifikasi hanya ketidakpastian penting. Risiko yang memengaruhi scope, keamanan, integritas data, atau kompatibilitas memblokir persetujuan bagian terdampak; jangan menyamarkan asumsi sebagai solusi final.
 5. Rancang core vertical slice terkecil yang memberi hasil end-to-end. Gunakan bagian berikut secukupnya; bagian tidak relevan boleh dihilangkan dengan alasan.
 

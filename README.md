@@ -2,7 +2,7 @@
 
 Paket skill OpenCode untuk membangun perangkat lunak berkualitas, aman, dan dapat dipercaya dari ide produk sampai verifikasi kode. Rancangan mengombinasikan alur perencanaan modular (`mini-prd`, `write-tech-spec`, `create-issues`), empat pilar Code Confidence Formula (`spec-contract`, `guideline-guard`, `deterministic-verify`, `evidence-receipt`), serta skill pendamping sesi (`project-handoff`).
 
-## Daftar Skills Lengkap (8 Modul)
+## Daftar Skills Lengkap (9 Modul Aktif + 1 Wrapper Kompatibilitas)
 
 ### Fase 1: Perencanaan & Breakdown
 | Modul | Tanggung jawab |
