@@ -2,7 +2,7 @@
 
 Paket skill OpenCode untuk membangun perangkat lunak berkualitas, aman, dan dapat dipercaya dari ide produk sampai verifikasi kode. Rancangan mengombinasikan alur perencanaan modular (`mini-prd`, `write-tech-spec`, `create-issues`), empat pilar Code Confidence Formula (`spec-contract`, `guideline-guard`, `deterministic-verify`, `evidence-receipt`), serta skill pendamping sesi (`project-handoff`).
 
-## Daftar Skills Lengkap (11 Modul Aktif + 1 Wrapper Kompatibilitas)
+## Daftar Skills Lengkap (12 Modul Aktif + 1 Wrapper Kompatibilitas)
 
 ### Fase 1: Perencanaan & Breakdown
 | Modul | Tanggung jawab |
@@ -25,9 +25,10 @@ Paket skill OpenCode untuk membangun perangkat lunak berkualitas, aman, dan dapa
 | [deterministic-verify](skills/deterministic-verify/SKILL.md) | **Independent Verification** | Eksekusi test runner, compiler, dan linter independen (bukan sekadar opini AI). |
 | [evidence-receipt](skills/evidence-receipt/SKILL.md) | **Evidence** | Terbitkan audit trail bukti eksekusi nyata, status AC, dan batas verifikasi sebelum serah terima. |
 
-### Fase 4: Sesi & Kolaborasi
+### Fase 4: Sesi, Review Visual & Kolaborasi
 | Modul | Tanggung jawab |
 |---|---|
+| [task-board](skills/task-board/SKILL.md) | Antarmuka Kanban visual lokal (`.agents/board.html`) untuk review task, catatan revisi manusia, dan instruksi agent. |
 | [project-handoff](skills/project-handoff/SKILL.md) | Simpan atau lanjutkan checkpoint sesi kerja (`.agents/HANDOFF.md`) lintas hari dan perangkat. |
 | [git-workflow](skills/git-workflow/SKILL.md) | Kelola commit, push, branch, dan PR adaptif (Conventional Commits) untuk solo dev maupun tim. |
 
@@ -49,6 +50,9 @@ Paket skill OpenCode untuk membangun perangkat lunak berkualitas, aman, dan dapa
           │
           ▼
     3. create-issues             --> Task list ber-ID (vertical slices)
+          │
+          ▼
+    [task-board]                 --> Visualisasi Kanban lokal (.agents/board.html)
           │
           ▼
     4. spec-contract             --> Kunci scope & acceptance criteria per task
@@ -74,6 +78,7 @@ Setiap modul dapat digunakan secara mandiri maupun terangkai dalam pipeline. Con
 Gunakan @mini-prd untuk merancang PRD fitur ini.
 Gunakan @write-tech-spec untuk menyusun rencana teknis dari PRD.
 Gunakan @create-issues untuk memecah spesifikasi menjadi task yang actionable.
+Gunakan @task-board untuk membuka atau memperbarui board Kanban interaktif.
 Gunakan @sentana-ui-patterns untuk merancang antarmuka admin panel atau landing page.
 Gunakan @spec-contract untuk mengunci scope task T-01 sebelum mulai coding.
 Gunakan @guideline-guard untuk memeriksa keamanan diff ini.

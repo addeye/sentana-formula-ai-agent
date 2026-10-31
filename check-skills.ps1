@@ -11,7 +11,8 @@ $names = @(
     'implement-task',
     'verify',
     'git-workflow',
-    'sentana-ui-patterns'
+    'sentana-ui-patterns',
+    'task-board'
 )
 foreach ($name in $names) {
     $path = Join-Path $PSScriptRoot "skills/$name/SKILL.md"

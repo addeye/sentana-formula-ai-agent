@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sentana Task Board - Interactive Kanban</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-hover: #273549;
+      --border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --purple: #8b5cf6;
+      --radius: 8px;
+      --font: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Top Navigation Bar */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+    }
+    .brand-badge {
+      background: rgba(59, 130, 246, 0.2);
+      color: var(--primary);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      background: var(--surface-hover);
+      color: var(--text);
+    }
+    .btn:hover { background: #334155; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-success:hover { background: #059669; }
+    .btn-sm { padding: 4px 8px; font-size: 0.75rem; }
+
+    /* Instructions & Search Bar */
+    .subbar {
+      background: #172033;
+      padding: 8px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.85rem;
+    }
+    .subbar input {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: var(--radius);
+      outline: none;
+      font-size: 0.85rem;
+    }
+    .subbar input:focus { border-color: var(--primary); }
+    .global-input { flex: 1; }
+
+    /* Kanban Board Container */
+    main.board-container {
+      display: flex;
+      flex: 1;
+      overflow-x: auto;
+      padding: 16px 20px;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .column {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      width: 320px;
+      min-width: 300px;
+      max-height: calc(100vh - 135px);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    }
+
+    .col-header {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .col-badge {
+      background: var(--bg);
+      color: var(--text-muted);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+    }
+
+    .card-list {
+      padding: 10px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+
+    /* Task Card */
+    .card {
+      background: #182234;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .card:hover {
+      border-color: #475569;
+      transform: translateY(-1px);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .card-id {
+      font-family: monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--primary);
+      background: rgba(59, 130, 246, 0.15);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .card-title {
+      font-weight: 600;
+      font-size: 0.88rem;
+      flex: 1;
+      color: #f1f5f9;
+    }
+
+    .card-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .card-ac {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: #cbd5e1;
+    }
+    .progress-bar {
+      flex: 1;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--success);
+      width: 0%;
+    }
+
+    .card-feedback {
+      background: rgba(245, 158, 11, 0.1);
+      border-left: 3px solid var(--warning);
+      padding: 6px 8px;
+      font-size: 0.78rem;
+      color: #fef3c7;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .card-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.75rem;
+    }
+    .select-status {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 4px;
+      padding: 2px 4px;
+      font-size: 0.72rem;
+      outline: none;
+    }
+
+    /* Modal Detail */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(2px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      padding: 20px;
+    }
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 650px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      font-size: 0.88rem;
+    }
+    .modal-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .detail-section {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .detail-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .detail-content {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      color: #e2e8f0;
+      font-size: 0.85rem;
+      white-space: pre-wrap;
+    }
+    textarea.feedback-input {
+      width: 100%;
+      min-height: 80px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      outline: none;
+      resize: vertical;
+    }
+    textarea.feedback-input:focus { border-color: var(--warning); }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--primary);
+      padding: 12px 18px;
+      border-radius: var(--radius);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+      display: none;
+      z-index: 100;
+      font-size: 0.88rem;
+    }
+
+    /* Empty state info */
+    .empty-state {
+      margin: auto;
+      text-align: center;
+      color: var(--text-muted);
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <span>Sentana Task Board</span>
+      <span class="brand-badge" id="fileStatusBadge">Belum Ada File</span>
+    </div>
+    <div class="toolbar">
+      <input type="file" id="fileFallbackInput" accept=".md" style="display: none;">
+      <button class="btn" id="btnOpenFile">📂 Buka .agents/TASKS.md</button>
+      <button class="btn btn-success" id="btnSaveFile" disabled>💾 Simpan ke TASKS.md</button>
+      <button class="btn btn-primary" id="btnCopyInstructions">📋 Salin Instruksi Agent</button>
+    </div>
+  </header>
+
+  <div class="subbar">
+    <label style="color: var(--text-muted); white-space: nowrap;">Instruksi Global:</label>
+    <input type="text" id="globalInstructionInput" class="global-input" placeholder="Ketik instruksi umum untuk sprint ini (misal: 'Prioritaskan bug mobile sebelum lanjut T-05')...">
+    <input type="text" id="filterInput" placeholder="Cari ID / Judul task..." style="width: 200px;">
+  </div>
+
+  <main class="board-container" id="boardColumns">
+    <!-- Kolom Kanban akan diisi secara dinamis -->
+  </main>
+
+  <div class="empty-state" id="emptyStatePlaceholder">
+    <h3>Board Belum Memuat Data Task</h3>
+    <p>Klik tombol <strong>"📂 Buka .agents/TASKS.md"</strong> di atas untuk membaca file task proyek ini.</p>
+  </div>
+
+  <!-- Modal Detail & Review Task -->
+  <div class="modal-backdrop" id="taskModalBackdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="card-id" id="modalTaskId">T-00</span>
+          <h3 id="modalTaskTitle" style="font-size: 1rem;">Judul Task</h3>
+        </div>
+        <button class="btn btn-sm" id="btnCloseModal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-section">
+          <span class="detail-label">Status Saat Ini</span>
+          <select id="modalStatusSelect" class="btn" style="width: fit-content;">
+            <option value="Todo">Todo</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Blocked">Blocked</option>
+            <option value="In Review">In Review</option>
+            <option value="Done">Done</option>
+          </select>
+        </div>
+        <div class="detail-section">
+          <span class="detail-label">Scope & Deskripsi</span>
+          <div class="detail-content" id="modalTaskScope">-</div>
+        </div>
+        <div class="detail-section">
+          <span class="detail-label">Acceptance Criteria</span>
+          <div class="detail-content" id="modalTaskAC">-</div>
+        </div>
+        <div class="detail-section">
+          <span class="detail-label">Verifikasi & Bukti Uji</span>
+          <div class="detail-content" id="modalTaskEvidence">-</div>
+        </div>
+        <div class="detail-section">
+          <span class="detail-label" style="color: var(--warning);">Reviewer Feedback (Instruksi Perbaikan)</span>
+          <textarea id="modalFeedbackInput" class="feedback-input" placeholder="Tulis instruksi revisi atau alasan approve/reject untuk agent..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-sm" id="btnQuickApprove" style="background: rgba(16, 185, 129, 0.2); color: var(--success); border-color: var(--success);">
+            ✓ Setujui (Done)
+          </button>
+          <button class="btn btn-sm" id="btnQuickRequestChange" style="background: rgba(245, 158, 11, 0.2); color: var(--warning); border-color: var(--warning);">
+            ↺ Minta Revisi (In Progress)
+          </button>
+        </div>
+        <button class="btn btn-primary btn-sm" id="btnSaveModalChanges">Terapkan Perubahan</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toastNotification">Instruksi berhasil disalin ke clipboard!</div>
+
+  <script>
+    // State Aplikasi
+    let fileHandle = null;
+    let rawMarkdown = "";
+    let tasks = [];
+    let activeTaskIndex = null;
+
+    const COLUMNS = [
+      { id: "Todo", title: "📌 Todo" },
+      { id: "In Progress", title: "⏳ In Progress" },
+      { id: "Blocked", title: "🚫 Blocked" },
+      { id: "In Review", title: "🔍 In Review" },
+      { id: "Done", title: "✅ Done" }
+    ];
+
+    // DOM Elements
+    const btnOpenFile = document.getElementById("btnOpenFile");
+    const fileFallbackInput = document.getElementById("fileFallbackInput");
+    const btnSaveFile = document.getElementById("btnSaveFile");
+    const btnCopyInstructions = document.getElementById("btnCopyInstructions");
+    const boardColumns = document.getElementById("boardColumns");
+    const emptyStatePlaceholder = document.getElementById("emptyStatePlaceholder");
+    const fileStatusBadge = document.getElementById("fileStatusBadge");
+    const filterInput = document.getElementById("filterInput");
+    const globalInstructionInput = document.getElementById("globalInstructionInput");
+    const toast = document.getElementById("toastNotification");
+
+    // Modal Elements
+    const modalBackdrop = document.getElementById("taskModalBackdrop");
+    const btnCloseModal = document.getElementById("btnCloseModal");
+    const modalTaskId = document.getElementById("modalTaskId");
+    const modalTaskTitle = document.getElementById("modalTaskTitle");
+    const modalStatusSelect = document.getElementById("modalStatusSelect");
+    const modalTaskScope = document.getElementById("modalTaskScope");
+    const modalTaskAC = document.getElementById("modalTaskAC");
+    const modalTaskEvidence = document.getElementById("modalTaskEvidence");
+    const modalFeedbackInput = document.getElementById("modalFeedbackInput");
+    const btnSaveModalChanges = document.getElementById("btnSaveModalChanges");
+    const btnQuickApprove = document.getElementById("btnQuickApprove");
+    const btnQuickRequestChange = document.getElementById("btnQuickRequestChange");
+
+    // File System Access API
+    btnOpenFile.addEventListener("click", async () => {
+      if ("showOpenFilePicker" in window) {
+        try {
+          const [handle] = await window.showOpenFilePicker({
+            types: [{ description: "Markdown Task List", accept: { "text/markdown": [".md"] } }],
+            multiple: false
+          });
+          fileHandle = handle;
+          const file = await fileHandle.getFile();
+          rawMarkdown = await file.text();
+          fileStatusBadge.textContent = file.name;
+          fileStatusBadge.style.color = "var(--success)";
+          btnSaveFile.disabled = false;
+          parseAndRender();
+        } catch (err) {
+          if (err.name !== "AbortError") {
+            console.warn("Picker error, fallback to standard input", err);
+            fileFallbackInput.click();
+          }
+        }
+      } else {
+        fileFallbackInput.click();
+      }
+    });
+
+    fileFallbackInput.addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      rawMarkdown = await file.text();
+      fileStatusBadge.textContent = file.name + " (Fallback)";
+      fileStatusBadge.style.color = "var(--warning)";
+      btnSaveFile.disabled = false;
+      parseAndRender();
+    });
+
+    btnSaveFile.addEventListener("click", async () => {
+      const serialized = serializeTasks();
+      if (fileHandle && "createWritable" in fileHandle) {
+        try {
+          const writable = await fileHandle.createWritable();
+          await writable.write(serialized);
+          await writable.close();
+          showToast("File .agents/TASKS.md berhasil disimpan!");
+        } catch (err) {
+          console.error("Gagal menyimpan langsung:", err);
+          downloadFallback(serialized);
+        }
+      } else {
+        downloadFallback(serialized);
+      }
+    });
+
+    function downloadFallback(content) {
+      const blob = new Blob([content], { type: "text/markdown" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "TASKS.md";
+      a.click();
+      showToast("Unduhan file TASKS.md telah dibuat!");
+    }
+
+    // Parser Markdown TASKS.md
+    function parseAndRender() {
+      tasks = [];
+      const lines = rawMarkdown.split(/\r?\n/);
+      let currentTask = null;
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const taskHeaderMatch = line.match(/^##\s+(T-[0-9]+(?:\.[0-9]+)?):\s*(.+)$/i);
+
+        if (taskHeaderMatch) {
+          if (currentTask) tasks.push(currentTask);
+          currentTask = {
+            id: taskHeaderMatch[1],
+            title: taskHeaderMatch[2].trim(),
+            status: "Todo",
+            scope: "",
+            acList: [],
+            evidence: "",
+            feedback: "",
+            rawLines: [line]
+          };
+          continue;
+        }
+
+        if (currentTask) {
+          currentTask.rawLines.push(line);
+
+          // Parse metadata fields
+          const statusMatch = line.match(/^-\s+\*\*Status:\*\*\s*(.+)$/i);
+          if (statusMatch) {
+            const rawStatus = statusMatch[1].trim();
+            if (rawStatus.includes("Progress")) currentTask.status = "In Progress";
+            else if (rawStatus.includes("Review")) currentTask.status = "In Review";
+            else if (rawStatus.includes("Blocked")) currentTask.status = "Blocked";
+            else if (rawStatus.includes("Done")) currentTask.status = "Done";
+            else currentTask.status = "Todo";
+          }
+
+          const scopeMatch = line.match(/^-\s+\*\*Scope:\*\*\s*(.+)$/i);
+          if (scopeMatch) currentTask.scope = scopeMatch[1].trim();
+
+          const acMatch = line.match(/^-\s+\[([ xX])\]\s*(.+)$/);
+          if (acMatch) {
+            currentTask.acList.push({
+              checked: acMatch[1].toLowerCase() === "x",
+              text: acMatch[2].trim()
+            });
+          }
+
+          const evidenceMatch = line.match(/^-\s+\*\*Bukti:\*\*\s*(.+)$/i);
+          if (evidenceMatch) currentTask.evidence = evidenceMatch[1].trim();
+
+          const feedbackMatch = line.match(/^-\s+\*\*Reviewer Feedback:\*\*\s*(.+)$/i);
+          if (feedbackMatch) currentTask.feedback = feedbackMatch[1].trim();
+        }
+      }
+
+      if (currentTask) tasks.push(currentTask);
+
+      renderBoard();
+    }
+
+    // Serializer Markdown (Memperbarui teks raw dengan status & feedback baru)
+    function serializeTasks() {
+      let output = "";
+      const lines = rawMarkdown.split(/\r?\n/);
+      let taskMap = {};
+      tasks.forEach(t => { taskMap[t.id] = t; });
+
+      let currentTaskId = null;
+      let hasWrittenFeedback = false;
+
+      for (let i = 0; i < lines.length; i++) {
+        let line = lines[i];
+        const taskHeaderMatch = line.match(/^##\s+(T-[0-9]+(?:\.[0-9]+)?):\s*(.+)$/i);
+
+        if (taskHeaderMatch) {
+          // If previous task had feedback but wasn't in original lines, we handle before next
+          currentTaskId = taskHeaderMatch[1];
+          hasWrittenFeedback = false;
+          output += line + "\n";
+          continue;
+        }
+
+        if (currentTaskId && taskMap[currentTaskId]) {
+          const t = taskMap[currentTaskId];
+
+          // Replace status line
+          if (line.match(/^-\s+\*\*Status:\*\*/i)) {
+            output += `- **Status:** ${t.status}\n`;
+            continue;
+          }
+
+          // Replace feedback line
+          if (line.match(/^-\s+\*\*Reviewer Feedback:\*\*/i)) {
+            if (t.feedback && t.feedback.trim()) {
+              output += `- **Reviewer Feedback:** ${t.feedback.trim()}\n`;
+            }
+            hasWrittenFeedback = true;
+            continue;
+          }
+        }
+
+        output += line + "\n";
+      }
+
+      return output.trimEnd() + "\n";
+    }
+
+    // Render Kanban UI
+    function renderBoard() {
+      if (tasks.length === 0) {
+        emptyStatePlaceholder.style.display = "flex";
+        boardColumns.style.display = "none";
+        return;
+      }
+
+      emptyStatePlaceholder.style.display = "none";
+      boardColumns.style.display = "flex";
+      boardColumns.innerHTML = "";
+
+      const filterTerm = filterInput.value.toLowerCase().trim();
+
+      COLUMNS.forEach(col => {
+        const colEl = document.createElement("div");
+        colEl.className = "column";
+
+        const filteredTasks = tasks.filter(t => {
+          const matchCol = t.status === col.id;
+          const matchQuery = !filterTerm || t.id.toLowerCase().includes(filterTerm) || t.title.toLowerCase().includes(filterTerm);
+          return matchCol && matchQuery;
+        });
+
+        colEl.innerHTML = `
+          <div class="col-header">
+            <span>${col.title}</span>
+            <span class="col-badge">${filteredTasks.length}</span>
+          </div>
+          <div class="card-list" id="list-${col.id.replace(/\s+/g, '')}"></div>
+        `;
+
+        const cardList = colEl.querySelector(".card-list");
+
+        filteredTasks.forEach(task => {
+          const card = document.createElement("div");
+          card.className = "card";
+
+          const totalAc = task.acList.length;
+          const doneAc = task.acList.filter(a => a.checked).length;
+          const acPercent = totalAc > 0 ? (doneAc / totalAc) * 100 : 0;
+
+          card.innerHTML = `
+            <div class="card-header">
+              <span class="card-id">${task.id}</span>
+              <div class="card-title">${escapeHtml(task.title)}</div>
+            </div>
+            ${task.scope ? `<div class="card-meta">${escapeHtml(task.scope.substring(0, 80))}${task.scope.length > 80 ? '...' : ''}</div>` : ''}
+            ${totalAc > 0 ? `
+              <div class="card-ac">
+                <span>AC: ${doneAc}/${totalAc}</span>
+                <div class="progress-bar"><div class="progress-fill" style="width: ${acPercent}%"></div></div>
+              </div>` : ''}
+            ${task.feedback ? `
+              <div class="card-feedback">
+                <strong>Feedback:</strong> ${escapeHtml(task.feedback)}
+              </div>` : ''}
+            <div class="card-actions">
+              <span style="color: var(--text-muted); font-size: 0.72rem;">Klik untuk detail</span>
+              <select class="select-status" onclick="event.stopPropagation();">
+                ${COLUMNS.map(c => `<option value="${c.id}" ${c.id === task.status ? 'selected' : ''}>${c.id}</option>`).join('')}
+              </select>
+            </div>
+          `;
+
+          // Handle move status via dropdown
+          const statusSelect = card.querySelector(".select-status");
+          statusSelect.addEventListener("change", (e) => {
+            task.status = e.target.value;
+            renderBoard();
+          });
+
+          // Open detail modal
+          card.addEventListener("click", () => openModal(task));
+
+          cardList.appendChild(card);
+        });
+
+        boardColumns.appendChild(colEl);
+      });
+    }
+
+    // Modal Handler
+    function openModal(task) {
+      activeTaskIndex = tasks.findIndex(t => t.id === task.id);
+      modalTaskId.textContent = task.id;
+      modalTaskTitle.textContent = task.title;
+      modalStatusSelect.value = task.status;
+      modalTaskScope.textContent = task.scope || "Tidak ada detail scope spesifik.";
+
+      if (task.acList.length > 0) {
+        modalTaskAC.innerHTML = task.acList.map(ac => `<div>${ac.checked ? '✅' : '⬜'} ${escapeHtml(ac.text)}</div>`).join('');
+      } else {
+        modalTaskAC.textContent = "Tidak ada kriteria AC bertingkat.";
+      }
+
+      modalTaskEvidence.textContent = task.evidence || "Belum ada bukti verifikasi dicatat.";
+      modalFeedbackInput.value = task.feedback || "";
+
+      modalBackdrop.style.display = "flex";
+    }
+
+    function closeModal() {
+      modalBackdrop.style.display = "none";
+      activeTaskIndex = null;
+    }
+
+    btnCloseModal.addEventListener("click", closeModal);
+    modalBackdrop.addEventListener("click", (e) => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+
+    btnSaveModalChanges.addEventListener("click", () => {
+      if (activeTaskIndex === null) return;
+      tasks[activeTaskIndex].status = modalStatusSelect.value;
+      tasks[activeTaskIndex].feedback = modalFeedbackInput.value.trim();
+      closeModal();
+      renderBoard();
+    });
+
+    btnQuickApprove.addEventListener("click", () => {
+      if (activeTaskIndex === null) return;
+      modalStatusSelect.value = "Done";
+      if (!modalFeedbackInput.value) modalFeedbackInput.value = "Disetujui setelah review bukti verifikasi.";
+      tasks[activeTaskIndex].status = "Done";
+      tasks[activeTaskIndex].feedback = modalFeedbackInput.value.trim();
+      closeModal();
+      renderBoard();
+      showToast(`Task ${tasks[activeTaskIndex].id} disetujui (Done)!`);
+    });
+
+    btnQuickRequestChange.addEventListener("click", () => {
+      if (activeTaskIndex === null) return;
+      modalStatusSelect.value = "In Progress";
+      if (!modalFeedbackInput.value) {
+        modalFeedbackInput.focus();
+        showToast("Tuliskan catatan perbaikan sebelum meminta revisi!");
+        return;
+      }
+      tasks[activeTaskIndex].status = "In Progress";
+      tasks[activeTaskIndex].feedback = modalFeedbackInput.value.trim();
+      closeModal();
+      renderBoard();
+      showToast(`Task ${tasks[activeTaskIndex].id} dikembalikan ke In Progress dengan catatan.`);
+    });
+
+    // Copy Agent Prompt Instructions
+    btnCopyInstructions.addEventListener("click", () => {
+      if (tasks.length === 0) {
+        showToast("Buka file TASKS.md terlebih dahulu.");
+        return;
+      }
+
+      const globalInst = globalInstructionInput.value.trim();
+      let prompt = "Instruksi Review dari Task Board (.agents/TASKS.md):\n";
+
+      if (globalInst) {
+        prompt += `\n[Instruksi Global Sprint]:\n${globalInst}\n`;
+      }
+
+      const tasksWithFeedback = tasks.filter(t => t.feedback && t.feedback.trim());
+      const inReviewTasks = tasks.filter(t => t.status === "In Review");
+
+      if (tasksWithFeedback.length === 0 && !globalInst && inReviewTasks.length === 0) {
+        prompt += "\nSemua task berjalan normal. Lanjutkan pengerjaan task dengan prioritas tertinggi yang berstatus Todo/In Progress.";
+      } else {
+        if (tasksWithFeedback.length > 0) {
+          prompt += "\n[Tindakan Revisi / Catatan Reviewer]:\n";
+          tasksWithFeedback.forEach(t => {
+            prompt += `- ${t.id} (${t.status}): ${t.feedback}\n`;
+          });
+        }
+        if (inReviewTasks.length > 0) {
+          prompt += "\n[Task Menunggu Review / Verifikasi]:\n";
+          inReviewTasks.forEach(t => {
+            prompt += `- ${t.id}: Menunggu verifikasi manual atau kelengkapan gate.\n`;
+          });
+        }
+      }
+
+      navigator.clipboard.writeText(prompt).then(() => {
+        showToast("Instruksi siap tempel telah disalin ke clipboard!");
+      }).catch(err => {
+        console.error("Gagal salin:", err);
+        showToast("Gagal menyalin otomatis ke clipboard.");
+      });
+    });
+
+    filterInput.addEventListener("input", renderBoard);
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.style.display = "block";
+      setTimeout(() => { toast.style.display = "none"; }, 3000);
+    }
+
+    function escapeHtml(str) {
+      return (str || "").replace(/[&<>"']/g, function(m) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+      });
+    }
+  </script>
+</body>
+</html>

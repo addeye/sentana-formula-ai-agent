@@ -46,3 +46,4 @@ Skill ini mandiri; jangan memasang atau mewajibkan skill lain.
 - `guideline-guard` memiliki audit arsitektur/keamanan; cantumkan gate relevan untuk fase implementasi, bukan klaim audit saat task generation.
 - `deterministic-verify` memiliki eksekusi verifikasi; task hanya merencanakan check dan kondisi lulus.
 - `evidence-receipt` memiliki laporan bukti serah terima; task menyediakan rujukan AC dan tempat bukti, tanpa laporan hasil fiktif.
+- `task-board` menyediakan visualisasi Kanban lokal (.agents/board.html) untuk review status task dan catatan reviewer.
