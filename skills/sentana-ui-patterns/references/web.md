@@ -94,6 +94,8 @@ Pilih salah satu dari 2 pola resmi Sentana:
 
 ## 4. Framework Translators (Kode Proposional Siap Pakai)
 
+**Preview interaktif:** Baca [`../templates/README.md`](../templates/README.md). Tailwind: [`login.html`](../templates/tailwind/login.html), [`admin.html`](../templates/tailwind/admin.html). Bootstrap 5: [`login.html`](../templates/bootstrap5/login.html), [`admin.html`](../templates/bootstrap5/admin.html). Masing-masing mencakup validasi, toggle password, navigasi mobile, pencarian lokal, form create/edit, dan state demo. Memerlukan internet untuk CDN; bukan produksi. Navigasi mobile preview menerapkan drawer modal native `<dialog>` dengan backdrop overlay (Escape, focus trap, dismissal backdrop) dan fallback disclosure in-flow bila script tidak aktif, tanpa menduplikasi link navigasi. Cuplikan di bawah hanya contoh proporsi statis, bukan halaman lengkap dengan perilaku.
+
 ### A. Tailwind CSS (Modern Utility)
 
 #### 1. Proportional Login Card

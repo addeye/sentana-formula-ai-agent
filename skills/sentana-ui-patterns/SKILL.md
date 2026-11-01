@@ -25,6 +25,8 @@ Sebelum menulis kode antarmuka atau komponen, periksa tipe halaman yang dibangun
 4. **Mobile & Tablet App (Android / iOS / PWA):** Baca referensi `references/mobile.md`.
 5. **Desktop App (Windows / macOS / POS Kasir):** Baca referensi `references/desktop.md`.
 
+Preview web runnable tersedia di `templates/README.md`: `tailwind/` dan `bootstrap5/`, masing-masing `login.html` dan `admin.html` (shell, daftar, form create/edit). CDN memerlukan internet; demo lokal, bukan autentikasi atau aplikasi produksi. Untuk implementasi interaktif, mulai dari template ini, bukan cuplikan statis referensi. Ikuti waktu audit anti-slop yang disepakati pengguna.
+
 ### 2. Standar Fondasi Komponen (Berlaku Lintas Platform)
 Setiap antarmuka yang dibangun wajib memenuhi:
 - **4 State Wajib:** Loading skeleton, Empty state informatif (dengan aksi), Error state ramah, dan Normal/Success state.
